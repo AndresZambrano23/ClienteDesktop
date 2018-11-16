@@ -5,17 +5,22 @@
  */
 package clientedesktop;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author Andres Garcia
  */
 public class consulprograma extends javax.swing.JFrame {
 
-    /**
-     * Creates new form consulprograma
-     */
+    int posx, posy;
     public consulprograma() {
         initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -29,6 +34,9 @@ public class consulprograma extends javax.swing.JFrame {
 
         regresar = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
+        programa = new javax.swing.JTextField();
+        ingresar = new javax.swing.JButton();
+        fondo = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setUndecorated(true);
@@ -36,14 +44,102 @@ public class consulprograma extends javax.swing.JFrame {
 
         regresar.setFont(new java.awt.Font("Arial Black", 2, 18)); // NOI18N
         regresar.setText("ATRAS");
+        regresar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        regresar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                regresarMouseClicked(evt);
+            }
+        });
         getContentPane().add(regresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 250, 110, -1));
 
         jLabel1.setFont(new java.awt.Font("Arial Black", 2, 18)); // NOI18N
         jLabel1.setText("Ingrese el codigo del programa");
         getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 340, 20));
+        getContentPane().add(programa, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 80, 170, -1));
+
+        ingresar.setText("INGRESAR");
+        ingresar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ingresarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(ingresar, new org.netbeans.lib.awtextra.AbsoluteConstraints(120, 150, 160, 50));
+
+        fondo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/consultapro.jpg"))); // NOI18N
+        fondo.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
+            public void mouseDragged(java.awt.event.MouseEvent evt) {
+                fondoMouseDragged(evt);
+            }
+        });
+        fondo.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                fondoMousePressed(evt);
+            }
+        });
+        getContentPane().add(fondo, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 410, 300));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void regresarMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_regresarMouseClicked
+       Menu a = new Menu();
+       a.setVisible(true);
+       this.setVisible(false);
+    }//GEN-LAST:event_regresarMouseClicked
+
+    private void fondoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoMousePressed
+       posx=evt.getX();
+        posy=evt.getY();
+    }//GEN-LAST:event_fondoMousePressed
+
+    private void fondoMouseDragged(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_fondoMouseDragged
+        int xp=evt.getXOnScreen() -posx;
+        int yp= evt.getYOnScreen() - posy;
+        this.setLocation(xp, yp);
+    }//GEN-LAST:event_fondoMouseDragged
+
+    private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
+       try {
+            String ced = programa.getText().trim();
+            URL url = new URL("http://localhost/Taller3-master/Vistas/listviprograma.php?programa="+ced);
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setRequestProperty("Accept" ,"application/json");
+            if (conn.getResponseCode() != 200) {
+                throw new RuntimeException("Failed : HTTP Error code : "
+                        + conn.getResponseCode());
+            }
+            InputStreamReader in = new InputStreamReader(conn.getInputStream());
+            BufferedReader br = new BufferedReader(in);
+            String output;
+            while ((output = br.readLine()) != null) {
+                //System.out.println(output);
+                JOptionPane.showMessageDialog(null, output);
+                
+                /*DefaultTableModel m = new  DefaultTableModel();
+                m.addColumn("ID");
+                m.addColumn("NOMBRE");
+                m.addColumn("DIRECCION");
+                m.addColumn("TELEFONO");
+        
+                String[]datos={output};
+                
+                m.addRow(datos);
+                
+                JTable tabla = new JTable(m);
+                tabla.setBounds(12,22,500,500);
+                setSize(750,700);
+                add(tabla);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setLayout(null);
+                setVisible(true);*/
+            }
+            conn.disconnect();
+
+        } catch (Exception e) {
+            System.out.println("Exception in NetClientGet:- " + e);
+        }
+    }//GEN-LAST:event_ingresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,7 +177,10 @@ public class consulprograma extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel fondo;
+    private javax.swing.JButton ingresar;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JTextField programa;
     private javax.swing.JLabel regresar;
     // End of variables declaration//GEN-END:variables
 }

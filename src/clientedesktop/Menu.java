@@ -105,7 +105,9 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_consultaproMouseClicked
 
     private void insertaestMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_insertaestMouseClicked
-        
+        ingresarestudiante ie = new ingresarestudiante();
+        ie.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_insertaestMouseClicked
 
     /**

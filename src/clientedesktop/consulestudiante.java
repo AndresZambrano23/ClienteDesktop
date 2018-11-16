@@ -10,6 +10,10 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JTable;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -20,7 +24,10 @@ public class consulestudiante extends javax.swing.JFrame {
     int posx, posy;
     public consulestudiante() {
         initComponents();
+        setLocationRelativeTo(null);
     }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -100,7 +107,7 @@ public class consulestudiante extends javax.swing.JFrame {
     private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
         try {
             String ced = cedula.getText().trim();
-            URL url = new URL("http://localhost/Taller3-master/Vistas/listvisestudiante.php?cedula=1013789345");//your url i.e fetch data from .
+            URL url = new URL("http://localhost/Taller3-master/Vistas/listvisestudiante.php?cedula="+ced);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept" ,"application/json");
@@ -112,7 +119,26 @@ public class consulestudiante extends javax.swing.JFrame {
             BufferedReader br = new BufferedReader(in);
             String output;
             while ((output = br.readLine()) != null) {
-                System.out.println(output);
+                //System.out.println(output);
+                JOptionPane.showMessageDialog(null, output);
+                
+                /*DefaultTableModel m = new  DefaultTableModel();
+                m.addColumn("ID");
+                m.addColumn("NOMBRE");
+                m.addColumn("DIRECCION");
+                m.addColumn("TELEFONO");
+        
+                String[]datos={output};
+                
+                m.addRow(datos);
+                
+                JTable tabla = new JTable(m);
+                tabla.setBounds(12,22,500,500);
+                setSize(750,700);
+                add(tabla);
+                setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                setLayout(null);
+                setVisible(true);*/
             }
             conn.disconnect();
 
