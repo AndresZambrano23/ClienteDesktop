@@ -7,8 +7,14 @@ package clientedesktop;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Map;
+import java.io.Reader;
+import java.net.URLConnection;
+import java.net.URLEncoder;
+import java.util.LinkedHashMap;
 import javax.swing.JOptionPane;
 
 /**
@@ -149,28 +155,46 @@ public class ingresarestudiante extends javax.swing.JFrame {
             String j = jornada.getText().trim();
             String t = telefono.getText().trim();
             String p = programa.getText().trim();
-            URL url = new URL("http://localhost:82/Taller3-master/Vistas/insertviestudiante.php?nombre="+n+"direccion="+d+"telefono="+t+"idjor="+j+"idpro="+p+"cedula="+c);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            String dato = "{\"nombre\":"+n+ "\"cedula\":"+c
-                + "\"direccion\":"+d+ "\"jornada\":"+j+ "\"telefono\":t,"+
-                    "\"programa\":"+p;
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Accept" ,"application/json");
-            if (conn.getResponseCode() != 200) {
-                throw new RuntimeException("Failed : HTTP Error code : "
-                        + conn.getResponseCode());
-            }
             
-            InputStreamReader in = new InputStreamReader(conn.getInputStream());
-            BufferedReader br = new BufferedReader(in);
-            String output;
-            while ((output = br.readLine()) != null) {
-                //System.out.println(output);
-                System.out.println(output.toString()+ "creado");
-                
-                
+            URL url = new URL("http://localhost/Taller3-master/Vistas/insertviestudiante.php");
+            Map<String, Object> params = new LinkedHashMap<>();
+ 
+            params.put("nombre",n);
+            params.put("cedula",c);
+            params.put("direccion",d);
+            params.put("idjor",j);
+            params.put("telefono",t);
+            params.put("idpro",p);
+            
+            StringBuilder postData = new StringBuilder();
+            for (Map.Entry<String,Object> param : params.entrySet()) {
+            if (postData.length() != 0) postData.append('&');
+            postData.append(URLEncoder.encode(param.getKey(), "UTF-8"));
+            postData.append('=');
+            postData.append(URLEncoder.encode(String.valueOf(param.getValue()), "UTF-8"));
             }
-            conn.disconnect();
+            String urlParameters = postData.toString();
+            URLConnection conn = url.openConnection();
+
+            conn.setDoOutput(true);
+
+            OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream());
+
+            writer.write(urlParameters);
+            writer.flush();
+
+            String result = "";
+            String line;
+            BufferedReader reader = new BufferedReader(new InputStreamReader(conn.getInputStream()));
+
+            while ((line = reader.readLine()) != null) {
+            result += line;
+            }
+            writer.close();
+            reader.close();
+            System.out.println(result);
+            
+            
 
         } catch (Exception e) {
             System.out.println("Exception in NetClientGet:- " + e);

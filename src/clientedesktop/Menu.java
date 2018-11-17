@@ -57,6 +57,7 @@ public class Menu extends javax.swing.JFrame {
 
         insertaest.setFont(new java.awt.Font("Arial Black", 3, 10)); // NOI18N
         insertaest.setText("Inserta Estudiante");
+        insertaest.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         insertaest.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 insertaestMouseClicked(evt);

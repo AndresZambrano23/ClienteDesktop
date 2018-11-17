@@ -101,7 +101,7 @@ public class consulprograma extends javax.swing.JFrame {
     private void ingresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ingresarActionPerformed
        try {
             String ced = programa.getText().trim();
-            URL url = new URL("http://localhost/Taller3-master/Vistas/listviprograma.php?programa="+ced);
+                URL url = new URL("http://localhost/Taller3-master/Vistas/listviprograma.php?programa="+ced);
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("GET");
             conn.setRequestProperty("Accept" ,"application/json");
